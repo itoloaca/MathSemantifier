@@ -27,11 +27,8 @@
             </div>
             <a id="semantify" class="btn btn-lg btn-success" href="#" role="button">Semantify MathML</a>
             <div id="results" class="">
-          <textarea> Much Results Very Wow Such Fun </textarea>
+            </div>
         </div>
-        </div>
-        
-        <div class="col-md-3"></div>
     </div>
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -39,10 +36,21 @@
     <script>
     var parsingEngineURL = "http://localhost:3000";
     var mmtURL = "http://localhost:8081";
+
     $(document).ready(function() {
-        console.log("Ready\n");
-        // Initialize grammar
-        $.post(parsingEngineURL + "/initialize_grammar");
+        console.log("Document ready\n");
+        console.log("Initializing grammar\n");
+        $.ajax({
+          url:parsingEngineURL + "/initialize_grammar",
+          type: 'post'
+        });
+        $("#semantify").click(function() {
+            $.post(parsingEngineURL + "/detect_notations",
+                $("#editor").val(),
+                function(data) {
+                    populate(data);
+                });
+        });
         // populate();
         // installNotationPosHandler();
     });

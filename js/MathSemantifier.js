@@ -3,8 +3,18 @@
         $("#results").append(html);
     }
 
-    function populate(data) {
-        var resultPageHeader = data["status"] + "<br>" + data["message"] + "<br>";
+    function postUrl(url) {
+        return 'proxy.php?url=' + encodeURIComponent(url);
+    }
+
+    function populate(jsonString) {
+        data = JSON.parse(jsonString);
+        console.log("Status: " + data["status"]);
+        console.log("Message: " + data["message"]);
+        console.log("Payload:");
+        console.log(data["payload"]);
+        var resultPageHeader = "Status: " +  data["status"] + "<br>" 
+            + "Message: " + data["message"] + "<br>";
         $("#results").append(resultPageHeader);
         for (var key in data["payload"]) {
             append('</br><span>' + key + '</span><br>');

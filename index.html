@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MathSemantifier</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/MathSemantifier.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="MathSemantifier" class="row">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-6">
+            <h3>Math Semantifier</h3>
+            <div id="textarea">
+                <textarea id="editor" rows="10" cols="60">
+                    <mo>lcm</mo>
+                    <mo>(</mo>
+                    <mi>3</mi>
+                    <mo>,</mo>
+                    <mi>4</mi>
+                    <mo>)</mo>
+                </textarea>
+            </div>
+            <a id="semantify" class="btn btn-lg btn-success" href="#" role="button">Semantify MathML</a>
+            <div id="results" class="">
+          <textarea> Much Results Very Wow Such Fun </textarea>
+        </div>
+        </div>
+        
+        <div class="col-md-3"></div>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/MathSemantifier.js"></script>
+    <script>
+    var parsingEngineURL = "http://localhost:3000";
+    var mmtURL = "http://localhost:8081";
+    $(document).ready(function() {
+        console.log("Ready\n");
+        // Initialize grammar
+        $.post(parsingEngineURL + "/initialize_grammar");
+        // populate();
+        // installNotationPosHandler();
+    });
+    </script>
+</body>
+
+</html>

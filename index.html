@@ -47,12 +47,9 @@
         $("#semantify").click(function() {
             $.post(parsingEngineURL + "/detect_notations",
                 $("#editor").val(),
-                function(data) {
-                    populate(data);
-                });
+                processNotPositions);
         });
-        // populate();
-        // installNotationPosHandler();
+        installNotationPosHandler(parsingEngineURL);
     });
     </script>
 </body>

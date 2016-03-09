@@ -14,3 +14,7 @@ Low ambiguity:
 Medium ambiguity:
 
 <msup><mi>3</mi><mi>4</mi></msup>
+
+
+Encoding (make * / + work)
+Precedences (make 3+4*5 work)

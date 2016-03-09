@@ -108,7 +108,7 @@ function installDisplayArgsHandler() {
 function replaceArgs(data) {
     console.log("replaceArgs");
     console.log(data);
-    $("#editor").val("Value of the editor was modified by replaceArgs");
+    $("#editor").val(data.cml);
     $("#results").empty();
     data = {};
     console.log("Work complete");

@@ -17,13 +17,13 @@
             <h3>Math Semantifier</h3>
             <div id="textarea">
                 <textarea id="editor" rows="10" cols="60">
-                    <mo>lcm</mo>
-                    <mo>(</mo>
+                    <mo>lcm</mo><mo>(</mo>
                     <mi>3</mi>
                     <mo>,</mo>
                     <mi>4</mi>
-                    <mo>)</mo>
-                </textarea>
+                    <mo>)</mo> 
+                 
+                </textarea> 
             </div>
             <a id="semantify" class="btn btn-lg btn-success" href="#" role="button">Semantify MathML</a>
             <div id="results" class="">
@@ -36,20 +36,24 @@
     <script>
     var parsingEngineURL = "http://localhost:3000";
     var mmtURL = "http://localhost:8081";
-
+    var data = {};
     $(document).ready(function() {
         console.log("Document ready\n");
         console.log("Initializing grammar\n");
+        
         $.ajax({
           url:parsingEngineURL + "/initialize_grammar",
           type: 'post'
         });
+
         $("#semantify").click(function() {
             $.post(parsingEngineURL + "/detect_notations",
                 $("#editor").val(),
-                processNotPositions);
+                function(jsonString) {
+                  data = JSON.parse(jsonString);
+                  processNotPositions();
+                });
         });
-        installNotationPosHandler(parsingEngineURL);
     });
     </script>
 </body>

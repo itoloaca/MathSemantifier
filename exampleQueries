@@ -1,0 +1,16 @@
+Low ambiguity:
+
+<mi>3</mi><mo>≤</mo><mi>4</mi>
+
+<mi>3</mi><mo>×</mo><mi>4</mi>
+
+<mi>3</mi><mo>div</mo><mi>4</mi>
+
+<mi>3</mi><mo>mod</mo><mi>4</mi>
+
+<mo>]</mo><mi>x</mi><mo>[</mo>
+
+
+Medium ambiguity:
+
+<msup><mi>3</mi><mi>4</mi></msup>

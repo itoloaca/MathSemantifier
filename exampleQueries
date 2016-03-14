@@ -18,3 +18,5 @@ Medium ambiguity:
 
 Encoding (make * / + work)
 Precedences (make 3+4*5 work)
+
+<mi>3</mi><mo>+</mo><mi>4</mi>

@@ -8,6 +8,15 @@
 function append(html) {
     $("#results").append(html);
 }
+function whynot(bitch) {
+   
+}
+function encodeAllURIComponents(str) {
+    return $.map(str.split(""), 
+        function(val, i) { 
+            return encodeURIComponent(val) 
+        }).join("");   
+}
 
 function processNotPositions() {
     console.log("Status: " + data["status"]);
@@ -40,7 +49,7 @@ function installNotationPosHandler() {
         console.log(".notation_pos button pressed\n");
         var input = data["message"];
         $.post(parsingEngineURL + "/get_arguments", {
-                input: input,
+                input: encodeAllURIComponents(input),
                 key: $(this).attr('key'),
                 start: $(this).attr('start'),
                 length: $(this).attr('length')
@@ -91,7 +100,7 @@ function installDisplayArgsHandler() {
             'status': 'OK',
             'payload': payload,
             'key': data.key,
-            'input': data.message
+            'input': encodeAllURIComponents(data.message)
         });
         console.log("Request data:\n");
         console.log(requestData);
@@ -108,7 +117,10 @@ function installDisplayArgsHandler() {
 function replaceArgs(data) {
     console.log("replaceArgs");
     console.log(data);
-    $("#editor").val(data.cml);
+    var result = unescape(data.cml);
+    console.log(data.cml);
+    console.log(result);
+    $("#editor").val(result);
     $("#results").empty();
     data = {};
     console.log("Work complete");

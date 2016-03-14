@@ -17,11 +17,11 @@
             <h3>Math Semantifier</h3>
             <div id="textarea">
                 <textarea id="editor" rows="10" cols="60">
-                    <mo>lcm</mo><mo>(</mo>
+                    
                     <mi>3</mi>
-                    <mo>,</mo>
+                    <mo>+</mo>
                     <mi>4</mi>
-                    <mo>)</mo> 
+                     
                  
                 </textarea> 
             </div>
@@ -45,10 +45,11 @@
           url:parsingEngineURL + "/initialize_grammar",
           type: 'post'
         });
-
+        var input = $("#editor").val();
+        var encodedInput = encodeAllURIComponents(input);
         $("#semantify").click(function() {
             $.post(parsingEngineURL + "/detect_notations",
-                $("#editor").val(),
+                encodedInput,
                 function(jsonString) {
                   data = JSON.parse(jsonString);
                   processNotPositions();

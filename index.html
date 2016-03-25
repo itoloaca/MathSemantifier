@@ -17,13 +17,12 @@
             <h3>Math Semantifier</h3>
             <div id="textarea">
                 <textarea id="editor" rows="10" cols="60">
-                    
                     <mi>3</mi>
-                    <mo>+</mo>
+                    <mo>mod</mo>
                     <mi>4</mi>
-                     
-                 
-                </textarea> 
+                    <mo>+</mo>
+                    <mi>5</mi>
+                </textarea>
             </div>
             <a id="semantify" class="btn btn-lg btn-success" href="#" role="button">Semantify MathML</a>
             <div id="results" class="">
@@ -40,10 +39,10 @@
     $(document).ready(function() {
         console.log("Document ready\n");
         console.log("Initializing grammar\n");
-        
+
         $.ajax({
-          url:parsingEngineURL + "/initialize_grammar",
-          type: 'post'
+            url: parsingEngineURL + "/initialize_grammar",
+            type: 'post'
         });
         var input = $("#editor").val();
         var encodedInput = encodeAllURIComponents(input);
@@ -51,8 +50,8 @@
             $.post(parsingEngineURL + "/detect_notations",
                 encodedInput,
                 function(jsonString) {
-                  data = JSON.parse(jsonString);
-                  processNotPositions();
+                    data = JSON.parse(jsonString);
+                    processNotPositions();
                 });
         });
     });

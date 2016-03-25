@@ -1,4 +1,4 @@
-Low ambiguity:
+$> FIRST SET OF EXAMPLES 
 
 <mi>3</mi><mo>≤</mo><mi>4</mi>
 
@@ -10,13 +10,20 @@ Low ambiguity:
 
 <mo>]</mo><mi>x</mi><mo>[</mo>
 
-
-Medium ambiguity:
-
 <msup><mi>3</mi><mi>4</mi></msup>
 
 
-Encoding (make * / + work)
-Precedences (make 3+4*5 work)
+$> SECOND SET OF EXAMPLES
 
-<mi>3</mi><mo>+</mo><mi>4</mi>
+// Sequence Arguments / ArgSeq
+<mi>3</mi><mo>+</mo><mi>4</mi><mo>+</mo><mi>5</mi>  
+
+
+// Notation as an argument of another notation (BOTH mod(3, 4+5) AND +(3 mod 4, 5) are detected)
+<mi>3</mi><mo>mod</mo><mi>4</mi><mo>+</mo><mi>5</mi> 
+
+
+CURRENT GOAL:
+
+Precedences (make 3 mod 4 + 5  have only the reading +(3 mod 4, 5))
+

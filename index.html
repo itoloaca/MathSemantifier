@@ -44,9 +44,10 @@
             url: parsingEngineURL + "/initialize_grammar",
             type: 'post'
         });
-        var input = $("#editor").val();
-        var encodedInput = encodeAllURIComponents(input);
+
         $("#semantify").click(function() {
+            var input = $("#editor").val();
+            var encodedInput = encodeAllURIComponents(input);
             $.post(parsingEngineURL + "/detect_notations",
                 encodedInput,
                 function(jsonString) {

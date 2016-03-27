@@ -8,9 +8,7 @@
 function append(html) {
     $("#results").append(html);
 }
-function whynot(bitch) {
-   
-}
+
 function encodeAllURIComponents(str) {
     return $.map(str.split(""), 
         function(val, i) { 

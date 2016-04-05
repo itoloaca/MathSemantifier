@@ -17,10 +17,10 @@
             <h3>Math Semantifier</h3>
             <div id="textarea">
                 <textarea id="editor" rows="10" cols="60">
+                    <mi>𝑖</mi>
+                    <mo>+</mo>
                     <mi>3</mi>
                     <mo>mod</mo>
-                    <mi>4</mi>
-                    <mo>+</mo>
                     <mi>5</mi>
                 </textarea>
             </div>
@@ -29,9 +29,9 @@
             </div>
         </div>
     </div>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/MathSemantifier.js"></script>
+    <script src="js/jquery.min.js" ></script>
+    <script src="js/bootstrap.min.js" ></script>
+    <script src="js/MathSemantifier.js" ></script>
     <script>
     var parsingEngineURL = "http://localhost:3000";
     var mmtURL = "http://localhost:8081";
@@ -47,16 +47,14 @@
 
         $("#semantify").click(function() {
             var input = $("#editor").val();
-            var encodedInput = encodeAllURIComponents(input);
-            $.post(parsingEngineURL + "/detect_notations",
-                encodedInput,
-                function(jsonString) {
-                    data = JSON.parse(jsonString);
-                    processNotPositions();
-                });
+            console.log("Input length is " + input.length);
+            var encodedInput = encodeURIComponent(input);
+            $.post(parsingEngineURL + "/detect_notations", 
+            encodedInput, 
+            processNotPositions);
         });
     });
-    </script>
+</script>
 </body>
 
 </html>

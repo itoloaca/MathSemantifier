@@ -27,3 +27,40 @@ CURRENT GOAL:
 
 Precedences (make 3 mod 4 + 5  have only the reading +(3 mod 4, 5))
 
+
+Not working:
+<mrow>
+         <mrow>
+                <mi>c</mi>
+                <mo>=</mo>
+                <mrow>
+                    <mo>(</mo>
+                    <mi>a</mi>
+                    <mo>+</mo>
+                    <mrow>
+                        <mi>b</mi>
+                        <mo>⁢</mo>
+                        <mo>𝑖</mo>
+                    </mrow>
+                    <mo>)</mo>
+                </mrow>
+            </mrow>
+        </mrow>
+Problem: Encoding problems
+Status: Working
+
+Not working:
+	<mi>4</mi>
+	<mo>+</mo>
+	<mi>3</mi>
+	<mo>mod</mo>
+	<mi>5</mi>
+Explanation: If we were to use standard techniques for parsing, the grammar is good enough to make it work, however because of my optimizations I also get rule matches
+from incomplete input matches, as follows: 
+The grammar starts reading in 4+3, finds out a rule matched, creates an event, even
+though the input is cannot be fully matched because of precedences.
+
+Solution: Use standard parsing techniques, but then the performance would be too slow
+for any kind of practical applications (I'm only using the first 50-100 parse trees to 
+get the arguments or rules)
+

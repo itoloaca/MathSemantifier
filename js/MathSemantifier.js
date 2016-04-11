@@ -11,6 +11,8 @@ function append(html) {
 
 function processNotPositions(data) {
     data = JSON.parse(data)
+    globalData = data
+    // FOR TESTING ONLY
     data["message"] = decodeURIComponent(data["message"])
     console.log("Status: " + data["status"]);
     console.log("Message: " + data["message"]);
@@ -22,9 +24,9 @@ function processNotPositions(data) {
         append('</br><span>' + key + '</span><br>');
         append('<div>Positions: </div>')
         for (var posArrIndex in data["payload"][key]) {
-            var start = data["payload"][key][posArrIndex][0];
-            var length = data["payload"][key][posArrIndex][1];
-            var pos = '[' + start + ", " + length + ']';
+            var start = data.payload[key][posArrIndex].position[0][0];
+            var length = data.payload[key][posArrIndex].position[0][1];
+            var pos = 'start = ' + start + ", len = " + length;
             var id = key + "_" + start + "_" + length;
             var info = 'key=\"' + key + '\" ';
             info += 'start=\"' + start + '\" ';
@@ -41,26 +43,30 @@ function processNotPositions(data) {
 function installNotationPosHandler(data) {
     $('.notation_pos').click(function(e) {
         console.log(".notation_pos button pressed\n");
-        var input = data["message"];
-        var url = parsingEngineURL + "/get_arguments";
-        var json = {
-            input: input,
-            key: $(this).attr('key'),
-            start: $(this).attr('start'),
-            length: $(this).attr('length')
-        }
-        $.post(url, json, displayArguments);
-        console.log($(this).attr('key') + " " + $(this).attr('start') + " " + $(this).attr('length'));
+        key = $(this).attr('key')
+        start = $(this).attr('start')
+        length = $(this).attr('length')
+        result = []
+        $.each(data.payload[key], function(index, value) {
+            var currStart = value.position[0][0];
+            var currLen = value.position[0][1];
+            if (currStart == start && currLen == length) {
+                result.push(value)    
+            }
+        })
+        resultData = {}
+        resultData.status = "OK"
+        resultData.message = data.message
+        resultData.payload = result
+        resultData.key = key
+        displayArguments(resultData)
     });
 }
 
 //{"status":"OK","payload":[{"position":[[0,52]],"argRuleN651A1ArgSeq":[[0,32],[42,10]]}],"key":"...","message":"..."}
-function displayArguments(arg) {
-    data = JSON.parse(arg);
-    data["message"] = decodeURIComponent(data["message"])
+function displayArguments(data) {
     
     console.log("In display arguments\n");
-    console.log(arg);
     console.log(data);
     
     $('#results').empty();

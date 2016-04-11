@@ -14,13 +14,13 @@
     <div id="MathSemantifier" class="row">
         <div class="col-xs-1"></div>
         <div class="col-xs-6">
-            <h3>Math Semantifier</h3>
+            <h3 id="title">Math Semantifier</h3>
             <div id="textarea">
                 <textarea id="editor" rows="10" cols="60">
                     <mi>𝑖</mi>
                     <mo>+</mo>
                     <mi>3</mi>
-                    <mo>mod</mo>
+                    <mo>+</mo>
                     <mi>5</mi>
                 </textarea>
             </div>
@@ -40,10 +40,8 @@
 <script>
 var parsingEngineURL = "http://localhost:3000";
 var mmtURL = "http://localhost:8081";
-var data = {};
+var globalData = {};
 $(document).ready(function() {
-    console.log("Document ready\n");
-    
    
      $("#semantify").click(function() {
         var input = $("#editor").val();

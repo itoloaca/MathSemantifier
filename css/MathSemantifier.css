@@ -2,6 +2,14 @@
 	/*resize: none;*/
 }
 
+#semantify {
+	margin-top: 10px;
+}
+
+#semantic-tree {
+	margin-top: 10px;
+}
+
 #results {
 	margin-top: 10px;
 }

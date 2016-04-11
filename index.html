@@ -25,36 +25,51 @@
                 </textarea>
             </div>
             <a id="semantify" class="btn btn-lg btn-success" href="#" role="button">Semantify MathML</a>
+            <a id="semantic-tree" class="btn btn-lg btn-success" href="#" role="button">Show Semantic Tree</a>
             <div id="results" class="">
             </div>
         </div>
     </div>
-    <script src="js/jquery.min.js" ></script>
-    <script src="js/bootstrap.min.js" ></script>
-    <script src="js/MathSemantifier.js" ></script>
-    <script>
-    var parsingEngineURL = "http://localhost:3000";
-    var mmtURL = "http://localhost:8081";
-    var data = {};
-    $(document).ready(function() {
-        console.log("Document ready\n");
-        console.log("Initializing grammar\n");
-
-        $.ajax({
-            url: parsingEngineURL + "/initialize_grammar",
-            type: 'post'
-        });
-
-        $("#semantify").click(function() {
-            var input = $("#editor").val();
-            console.log("Input length is " + input.length);
-            var encodedInput = encodeURIComponent(input);
-            $.post(parsingEngineURL + "/detect_notations", 
-            encodedInput, 
-            processNotPositions);
-        });
-    });
+    <script src="js/jquery.min.js" >
 </script>
-</body>
+    <script src="js/bootstrap.min.js" >
+</script>
+    <script src="js/MathSemantifier.js" >
+</script>
 
+<script>
+var parsingEngineURL = "http://localhost:3000";
+var mmtURL = "http://localhost:8081";
+var data = {};
+$(document).ready(function() {
+    console.log("Document ready\n");
+    
+   
+     $("#semantify").click(function() {
+        var input = $("#editor").val();
+        console.log("Input length is " + input.length);
+        var encodedInput = encodeURIComponent(input);
+        $.post(parsingEngineURL + "/detect_notations", 
+        encodedInput, 
+        processNotPositions);
+    });
+    
+    $("#semantic-tree").click(function() {
+        var input = $("#editor").val();
+        var encodedInput = encodeURIComponent(input);
+        $.ajax({
+            url: mmtURL + "/:marpa/getSemanticTree?=",
+            type: 'post',
+            data: encodedInput,
+            contentType: "text/plain",
+            success: function(data) {
+                console.log(data);
+            }
+        });
+    })
+
+});
+</script>
+
+</body>
 </html>

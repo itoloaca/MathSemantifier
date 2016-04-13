@@ -27,7 +27,7 @@ function processNotPositions(data) {
             var start = data.payload[key][posArrIndex].position[0][0];
             var length = data.payload[key][posArrIndex].position[0][1];
             var substring = data.payload[key][posArrIndex].position[0][2];
-            var pos = math(unescape(substring));
+            var pos = math(decodeURIComponent(substring));
             var id = key + "_" + start + "_" + length;
             var info = 'key=\"' + key + '\" ';
             info += 'start=\"' + start + '\" ';
@@ -89,7 +89,7 @@ function displayArguments(data) {
                 var length = data["payload"][i][key][posArrIndex][1];
                 var substring = data["payload"][i][key][posArrIndex][2];
                 var info = 'key=\"' + key + '\" ';
-                var pos = math(unescape(substring));
+                var pos = math(decodeURIComponent(substring));
                 var html = '<span>' + key + ': ' + pos + '; </span>';
                 append(html);
                 append('<span> </span>');
@@ -125,7 +125,7 @@ function installDisplayArgsHandler(data) {
 function replaceArgs(data) {
     console.log("replaceArgs");
     console.log(data);
-    var result = unescape(data.cml);
+    var result = decodeURIComponent(data.cml);
     result = decodeURIComponent(result);
     console.log(data.cml);
     console.log(result);

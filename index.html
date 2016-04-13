@@ -17,12 +17,16 @@
             <h3 id="title">Math Semantifier</h3>
             <div id="textarea">
                 <textarea id="editor" rows="10" cols="60">
-                    <mi>𝑖</mi>
-                    <mo>+</mo>
+                    <mi>i</mi>
+                    <mo>mod</mo>
+                    <mi>5</mi>
+                    <mo>+</mo>         
                     <mi>3</mi>
-                    <mo>+</mo>
+                    <mo>mod</mo>
                     <mi>5</mi>
                 </textarea>
+            </div>
+            <div id="mathml">
             </div>
             <a id="semantify" class="btn btn-lg btn-success" href="#" role="button">Semantify MathML</a>
             <a id="semantic-tree" class="btn btn-lg btn-success" href="#" role="button">Show Semantic Tree</a>
@@ -41,8 +45,15 @@
 var parsingEngineURL = "http://localhost:3000";
 var mmtURL = "http://localhost:8081";
 var globalData = {};
+
+function math(str) {
+    return `<math xmlns="http://www.w3.org/1998/Math/MathML">` + str + `</math>`
+}
+
 $(document).ready(function() {
-   
+     window.setInterval(function(){
+        $("#mathml").html(math($("#editor").val()));
+     }, 500);
      $("#semantify").click(function() {
         var input = $("#editor").val();
         console.log("Input length is " + input.length);

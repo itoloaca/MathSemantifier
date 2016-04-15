@@ -17,8 +17,7 @@
             <h3 id="title">Math Semantifier</h3>
             <div id="textarea">
                 <textarea id="editor" rows="10" cols="60">
-                    <mi>i</mi>
-                    <mo>⁢</mo>
+                    
                     <mi>5</mi>
                     <mo>+</mo>         
                     <mi>3</mi>
@@ -42,6 +41,7 @@
 </script>
 
 <script>
+
 var parsingEngineURL = "http://localhost:3000";
 var mmtURL = "http://localhost:8081";
 var globalData = {};
@@ -49,12 +49,26 @@ var globalData = {};
 function math(str) {
     return `<math xmlns="http://www.w3.org/1998/Math/MathML">` + str + `</math>`
 }
+var entityMap = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': '&quot;',
+    "'": '&#39;',
+    "/": '&#x2F;'
+};
+
+function escapeHtml(string) {
+    return String(string).replace(/[&<>"'\/]/g, function(s) {
+        return entityMap[s];
+    });
+}
 
 $(document).ready(function() {
-     window.setInterval(function(){
+    window.setInterval(function() {
         $("#mathml").html(math($("#editor").val()));
-     }, 500);
-     $("#semantify").click(function() {
+    }, 500);
+    $("#semantify").click(function() {
         var input = $("#editor").val();
         console.log("Input length is " + input.length);
         var encodedInput = encodeURIComponent(input);
@@ -72,7 +86,13 @@ $(document).ready(function() {
             data: encodedInput,
             contentType: "text/plain",
             success: function(data) {
-                console.log(data);
+                $("#results").empty();
+                $.each(data, function(ind, reading) {
+                    i = ind + 1
+                    console.log(reading);
+                    reading = escapeHtml(reading)
+                    $("#results").append("Reading " + i + ")</br>" + reading + "<br/><br/>")
+                })
             }
         });
     })

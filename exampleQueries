@@ -23,10 +23,14 @@ $> SECOND SET OF EXAMPLES
 <mi>3</mi><mo>mod</mo><mi>4</mi><mo>+</mo><mi>5</mi> 
 
 
-CURRENT GOAL:
-
-Precedences (make 3 mod 4 + 5  have only the reading +(3 mod 4, 5))
-
+Invisible times:
+<mi>i</mi>
+<mo>⁢</mo>
+<mi>5</mi>
+<mo>+</mo>         
+<mi>3</mi>
+<mo>mod</mo>
+<mi>5</mi>
 
 Not working:
 <mrow>

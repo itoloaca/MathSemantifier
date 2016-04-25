@@ -1,5 +1,4 @@
 #editor {
-
 }
 
 #MathSemantifier {
@@ -13,6 +12,7 @@
 #semantify {
 	margin-top: 10px;
 	width: 220px;
+	margin-right:5px;
 }
 
 #semantic-tree {
@@ -31,8 +31,10 @@
 .preview {
 	 outline: 1px solid silver;
      text-align: center;
-     width: 440px;
-	 vertical-align: middle;	 
+     width: 100%;
+	 vertical-align: middle;
+	 margin-bottom:5px;	 
+	 margin-top:10px;
 }
 
 .not-btn {

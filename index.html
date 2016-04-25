@@ -21,13 +21,13 @@
 <body>
     <div id="MathSemantifier" class="row">
         <div class="col-xs-1"></div>
-        <div class="col-xs-6">
+        <div class="col-xs-10">
             <h3 id="title">Math Semantifier</h3>
             <div id="textarea">
-                <textarea id="editor" rows="10" cols="60">
-        <mo>i</mo>
-        <mo>+</mo>
+                <textarea id="editor" rows="30" cols="30">
         <mn>2</mn>
+        <mo>+</mo>
+        <mo>i</mo>
         <mo>+</mo>         
         <mi>x</mi>
         <mo>mod</mo>
@@ -41,7 +41,7 @@
             <input type="checkbox" id="term-sharing" name="term-sharing" /> Use term sharing <br/>
             <a id="semantify" class="btn btn-lg btn-success" href="#" role="button">Semantify MathML</a>
             <a id="semantic-tree" class="btn btn-lg btn-success" href="#" role="button">Show Semantic Tree</a>
-            <div id="results" class="">
+            <div id="results" class="row">
             </div>
         </div>
     </div>
@@ -54,6 +54,8 @@
 
 <script>
 
+
+
 var parsingEngineURL = "http://localhost:3000";
 var mmtURL = "http://localhost:8081";
 var globalData = {};
@@ -61,7 +63,8 @@ var globalData = {};
 var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
     lineNumbers: true,
     mode: "text/html",
-    matchBrackets: true
+    matchBrackets: true,
+    viewportMargin: Infinity
 });
 
 function math(str) {
@@ -149,6 +152,7 @@ $(document).ready(function() {
             editor.getDoc().setValue(data[index]);
             $("#results").empty();
             data = {};
+            autoFormat();
         })
     }
 

@@ -138,4 +138,5 @@ function replaceArgs(data) {
     editor.getDoc().setValue(result);
     $("#results").empty();
     data = {};
+    autoFormat();
 }

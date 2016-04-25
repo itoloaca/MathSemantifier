@@ -46,6 +46,7 @@
 
 <script>
 
+
 var parsingEngineURL = "http://localhost:3000";
 var mmtURL = "http://localhost:8081";
 var globalData = {};
@@ -81,6 +82,13 @@ $(document).ready(function() {
         processNotPositions);
     });
     
+    
+    readingBtnTmpl = index=>`
+      <button index="${index}" class="semantic-tree-reading btn btn-default">
+      Reading ${index + 1}
+      </button>
+    `
+    
     $("#semantic-tree").click(function() {
         var input = $("#editor").val();
         var encodedInput = encodeURIComponent(input);
@@ -95,14 +103,26 @@ $(document).ready(function() {
             success: function(data) {
                 $("#results").empty();
                 $.each(data, function(ind, reading) {
-                    i = ind + 1
                     console.log(reading);
                     reading = escapeHtml(reading)
-                    $("#results").append("Reading " + i + ")</br>" + reading + "<br/><br/>")
-                })
+                    readingBtn = readingBtnTmpl(ind)
+                    $("#results").append(readingBtn)
+                    $("#results").append("</br><span>" + reading + "</span><br/><br/>")
+                });
+                installSemanticTreeBtnHandler(data);
             }
         });
     })
+    
+    function installSemanticTreeBtnHandler(data) {
+        $(".semantic-tree-reading").click(function() {
+            index = $(this).attr('index')
+            console.log("Index = " + index + " selected")
+            $("#editor").val(data[index]);
+            $("#results").empty();
+            data = {};
+        })
+    }
 
 });
 </script>

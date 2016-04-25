@@ -53,7 +53,7 @@ function installNotationPosHandler(data) {
             var currLen = value.position[0][1];
             var currStr = value.position[0][2];
             if (currStart == start && currLen == length) {
-                result.push(value)    
+                result.push(value)
             }
         })
         resultData = {}
@@ -132,5 +132,4 @@ function replaceArgs(data) {
     $("#editor").val(result);
     $("#results").empty();
     data = {};
-    console.log("Work complete");
 }

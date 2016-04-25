@@ -18,11 +18,12 @@ function processNotPositions(data) {
     console.log("Message: " + data["message"]);
     console.log("Payload:");
     console.log(data["payload"]);
-    var resultPageHeader = "Status: " + data["status"] + "<br>" + "Message: " + data["message"] + "<br>";
+    var resultPageHeader = "Detected notations: <br>";
     $("#results").append(resultPageHeader);
     for (var key in data["payload"]) {
-        append('</br><span>' + key + '</span><br>');
-        append('<div>Positions: </div>')
+        //         append('</br><span>' + key.split("_").join(" ").replace(/P\d+N\d+$/,"") + '</span><br>');
+        var cur = "<div class=\"custom-row\">";
+        
         for (var posArrIndex in data["payload"][key]) {
             var start = data.payload[key][posArrIndex].position[0][0];
             var length = data.payload[key][posArrIndex].position[0][1];
@@ -32,11 +33,12 @@ function processNotPositions(data) {
             var info = 'key=\"' + key + '\" ';
             info += 'start=\"' + start + '\" ';
             info += 'length=\"' + length + '\" ';
-            var html = '<button class="notation_pos" ' + info + '>' + pos + '</button>';
-            // 
-            append(html);
-            append('<span> </span>');
+            var html = '<button class="notation_pos not-btn btn btn-default" ' + info + '>' + key.split("_").join(" ").replace(/P\d+N\d+$/, "") + '</button>';
+            cur += html
+            break;
         }
+        cur += "</div>";
+        append(cur);
     }
     installNotationPosHandler(data);
 }
@@ -74,11 +76,14 @@ function displayArguments(data) {
     $('#results').empty();
     
     var resultPageHeader = data["status"] + "<br>" + data["message"] + "<br>";
-    $("#results").append(resultPageHeader);
-    $("#results").append('<div>' + data["key"] + '</div>');
+    //     $("#results").append(resultPageHeader);
+    var key = data.key;
+    $("#results").append('<div>' + key.split("_").join(" ").replace(/P\d+N\d+$/, "") + '</div>');
     for (var i in data["payload"]) {
-        console.log("In loop in display arguments " + i);
-        append('<button class="argument_pos" index="' + i + '"> Argument positions choice ' + i + '</button>');
+        
+        var presentIndex = Number(i) + 1
+        console.log(presentIndex)
+        append('<button class="argument_pos btn btn-default" index="' + i + '"> Choice ' + presentIndex + '</button>');
         append('<br>');
         for (var key in data["payload"][i]) {
             if (key == "position") {
@@ -90,7 +95,8 @@ function displayArguments(data) {
                 var substring = data["payload"][i][key][posArrIndex][2];
                 var info = 'key=\"' + key + '\" ';
                 var pos = math(decodeURIComponent(substring));
-                var html = '<span>' + key + ': ' + pos + '; </span>';
+                var argNr = "argRuleN124A1ArgSeq".replace(/(^.*N\d+A)(\d+)(Arg.*$)/,"$2")
+                var html = '<span> Argument ' + argNr + ': ' + pos + '; </span></br>';
                 append(html);
                 append('<span> </span>');
             }
@@ -129,7 +135,7 @@ function replaceArgs(data) {
     result = decodeURIComponent(result);
     console.log(data.cml);
     console.log(result);
-    $("#editor").val(result);
+    editor.getDoc().setValue(result);
     $("#results").empty();
     data = {};
 }

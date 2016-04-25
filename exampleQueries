@@ -24,13 +24,13 @@ $> SECOND SET OF EXAMPLES
 
 
 Invisible times:
-<mi>i</mi>
-<mo>⁢</mo>
-<mi>5</mi>
-<mo>+</mo>         
-<mi>3</mi>
-<mo>mod</mo>
-<mi>5</mi>
+<mo>i</mo>
+        <mo>⁢</mo>
+        <mn>2</mn>
+        <mo>+</mo>         
+        <mi>x</mi>
+        <mo>mod</mo>
+        <mn>5</mn>
 
 Not working:
 <mrow>

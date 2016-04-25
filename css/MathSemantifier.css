@@ -62,3 +62,8 @@
   border-radius: 25px;
 }
  
+.preview {
+	 outline: 1px solid silver;
+     text-align: center;
+	 vertical-align: middle;	 
+}

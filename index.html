@@ -17,16 +17,20 @@
             <h3 id="title">Math Semantifier</h3>
             <div id="textarea">
                 <textarea id="editor" rows="10" cols="60">
-                    
-                    <mi>5</mi>
+                    <mo>i</mo>
+                    <mo>⁢</mo>
+                    <mn>2</mn>
                     <mo>+</mo>         
-                    <mi>3</mi>
+                    <mi>x</mi>
                     <mo>mod</mo>
-                    <mi>5</mi>
+                    <mn>5</mn>
                 </textarea>
             </div>
-            <div id="mathml">
+            <h4 id="live-preview">MathML Preview</h4>
+            <div id="mathml" class="preview">
             </div>
+
+            <input type="checkbox" id="term-sharing" name="term-sharing" /> Use term sharing <br/>
             <a id="semantify" class="btn btn-lg btn-success" href="#" role="button">Semantify MathML</a>
             <a id="semantic-tree" class="btn btn-lg btn-success" href="#" role="button">Show Semantic Tree</a>
             <div id="results" class="">
@@ -82,8 +86,11 @@ $(document).ready(function() {
         var encodedInput = encodeURIComponent(input);
         $.ajax({
             url: mmtURL + "/:marpa/getSemanticTree?=",
-            type: 'post',
-            data: encodedInput,
+            type: 'POST',
+            data: {
+                input: encodedInput,
+                termSharing: $('#term-sharing').prop('checked')
+            },
             contentType: "text/plain",
             success: function(data) {
                 $("#results").empty();

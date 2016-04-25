@@ -110,12 +110,12 @@ function installDisplayArgsHandler(data) {
         console.log(".argument_pos used\n");
         console.log(data);
         var payload = data.payload[$(this).attr('index')];
-        var requestData = encodeURIComponent(JSON.stringify({
+        var requestData = JSON.stringify({
             'status': 'OK',
             'payload': payload,
             'key': data.key,
             'input': data.message
-        }));
+        });
         console.log("Request data:\n");
         console.log(requestData);
         $.ajax({

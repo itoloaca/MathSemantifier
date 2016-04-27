@@ -136,6 +136,12 @@ function replaceArgs(data) {
     console.log(result);
     editor.getDoc().setValue(result);
     $("#results").empty();
+    var beautifiedXML = vkbeautify.xml(result).trim()
+    new XMLTree({
+        xml: beautifiedXML,
+        container: "#results",
+        startExpanded: true
+    })
     data = {};
     autoFormat();
 }

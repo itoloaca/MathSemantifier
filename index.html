@@ -6,10 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MathSemantifier</title>
-    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="css/MathSemantifier.css" rel="stylesheet"/>
     <link rel=stylesheet href="lib/codemirror/css/codemirror.css"/>
     <link href="lib/codebeautify/css/formatter.css" rel="stylesheet"/>
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="css/MathSemantifier.css" rel="stylesheet"/>
     <script src="lib/codemirror/js/codemirror.js">
 </script>
     <script src="lib/codemirror/js/xml.js">
@@ -49,7 +49,8 @@
             <div id="mathml" class="preview">
             </div>
 
-            <input type="checkbox" id="term-sharing" name="term-sharing" /> Use term sharing <br/>
+            <input type="checkbox" id="term-sharing" name="term-sharing" /> Term Sharing <br/>
+            <input type="checkbox" id="cross-reference" name="cross-reference" /> Cross Reference <br/>
             <a id="semantify" class="btn btn-lg btn-success" href="#" role="button">Semantify MathML</a>
             <a id="semantic-tree" class="btn btn-lg btn-success" href="#" role="button">Show Semantic Tree</a>
             <div id="results" class="row">
@@ -61,6 +62,7 @@
    
 
 <script>
+
 
 
 
@@ -96,7 +98,7 @@ function escapeHtml(string) {
 }
 
 function autoFormat() {
-     editor.getDoc().setValue(vkbeautify.xml(editor.getValue()).trim());
+    editor.getDoc().setValue(vkbeautify.xml(editor.getValue()).trim());
 }
 
 function postProcessReading(xml) {
@@ -105,6 +107,14 @@ function postProcessReading(xml) {
     $("csymbol", doc).removeAttr("id");
     return (new XMLSerializer()).serializeToString(doc);
 }
+
+function addUniqueIds(xml) {
+    var doc = $.parseXML(xml)
+    var uniqueId = 1
+    $("*",doc).each(function(){$(this).attr('id', uniqueId); uniqueId++})
+    return (new XMLSerializer()).serializeToString(doc);
+}
+
 
 $(document).ready(function() {
     autoFormat();
@@ -133,12 +143,14 @@ $(document).ready(function() {
         input = input.replace(/\s*(<\/?[^<>\s]*(?:\s*[^=<>]+\s*="[^"]*"\s*)*>)\s*/g, "$1")
         var encodedInput = encodeURIComponent(input)
         var termSharing = $('#term-sharing').prop('checked')
+        var crossReference = $('#cross-reference').prop('checked')
         $.ajax({
             url: mmtURL + "/:marpa/getSemanticTree?=",
             type: 'POST',
             data: {
                 input: encodedInput,
-                termSharing: termSharing
+                termSharing: termSharing,
+                crossReference: crossReference
             },
             contentType: "text/plain",
             success: function(data) {
@@ -154,7 +166,11 @@ $(document).ready(function() {
                     $("#results").append(divTpl(ind))
                     var beautifiedXML = vkbeautify.xml(reading).trim()
                     console.log(beautifiedXML)
-                    new XMLTree({xml:beautifiedXML, container: "#reading"+ind, startExpanded:true})
+                    new XMLTree({
+                        xml: beautifiedXML,
+                        container: "#reading" + ind,
+                        startExpanded: true
+                    })
                 });
                 installSemanticTreeBtnHandler(data);
             }

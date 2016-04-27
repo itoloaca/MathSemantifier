@@ -20,10 +20,10 @@ function processNotPositions(data) {
     console.log(data["payload"]);
     var resultPageHeader = "Detected notations: <br>";
     $("#results").append(resultPageHeader);
+    
     for (var key in data["payload"]) {
         //         append('</br><span>' + key.split("_").join(" ").replace(/P\d+N\d+$/,"") + '</span><br>');
-        var cur = "<div class=\"custom-row\">";
-        
+        cur = ""
         for (var posArrIndex in data["payload"][key]) {
             var start = data.payload[key][posArrIndex].position[0][0];
             var length = data.payload[key][posArrIndex].position[0][1];
@@ -37,7 +37,6 @@ function processNotPositions(data) {
             cur += html
             break;
         }
-        cur += "</div>";
         append(cur);
     }
     installNotationPosHandler(data);
@@ -95,7 +94,7 @@ function displayArguments(data) {
                 var substring = data["payload"][i][key][posArrIndex][2];
                 var info = 'key=\"' + key + '\" ';
                 var pos = math(decodeURIComponent(substring));
-                var argNr = "argRuleN124A1ArgSeq".replace(/(^.*N\d+A)(\d+)(Arg.*$)/,"$2")
+                var argNr = "argRuleN124A1ArgSeq".replace(/(^.*N\d+A)(\d+)(Arg.*$)/, "$2")
                 var html = '<span> Argument ' + argNr + ': ' + pos + '; </span></br>';
                 append(html);
                 append('<span> </span>');

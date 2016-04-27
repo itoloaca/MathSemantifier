@@ -25,12 +25,14 @@
 }
  
 .custom-row {
-	width:100px;
+/* 	width:100px; */
 }
  
 .preview {
 	 outline: 1px solid silver;
-     text-align: center;
+     text-align: left;
+     padding: 5px;
+     padding-left:10px;
      width: 100%;
 	 vertical-align: middle;
 	 margin-bottom:5px;	 
@@ -40,4 +42,5 @@
 .not-btn {
 	min-width:150px;
 	margin-bottom:7px;
+	margin-right:7px;
 }

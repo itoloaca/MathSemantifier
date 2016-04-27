@@ -6,16 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MathSemantifier</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/MathSemantifier.css" rel="stylesheet">
-    <link rel=stylesheet href="css/codemirror.css">
-    <script src="js/codemirror.js">
-</script>
-    <script src="js/xml.js">
-</script>
-    <script src="js/formatting.js">
-</script>
-</script>
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="css/MathSemantifier.css" rel="stylesheet"/>
+    
+    <link rel=stylesheet href="css/codemirror.css"/>
+    
+    <script src="js/codemirror.js"></script>
+    <script src="js/xml.js"></script>
+    <script src="js/formatting.js"></script>
+    
 </head>
 
 <body>
@@ -53,6 +52,7 @@
 </script>
 
 <script>
+
 
 
 
@@ -97,6 +97,13 @@ function autoFormat() {
     });
 }
 
+function postProcessReading(xml) {
+    var doc = $.parseXML(xml);
+    $("apply", doc).removeAttr("id");
+    $("csymbol", doc).removeAttr("id");
+    return (new XMLSerializer()).serializeToString(doc);
+}
+
 $(document).ready(function() {
     autoFormat();
     window.setInterval(function() {
@@ -112,7 +119,6 @@ $(document).ready(function() {
         processNotPositions);
     });
     
-    
     readingBtnTmpl = index=>`
       <button index="${index}" class="semantic-tree-reading btn btn-default">
       Reading ${index + 1}
@@ -120,25 +126,32 @@ $(document).ready(function() {
     `
     
     $("#semantic-tree").click(function() {
-        $("#results").empty();
-        var input = editor.getValue();
-        var encodedInput = encodeURIComponent(input);
+        $("#results").empty()
+        var input = editor.getValue()
+        input = input.replace(/\s*(<\/?[^<>\s]*(?:\s*[^=<>]+\s*="[^"]*"\s*)*>)\s*/g, "$1")
+        var encodedInput = encodeURIComponent(input)
+        var termSharing = $('#term-sharing').prop('checked')
         $.ajax({
             url: mmtURL + "/:marpa/getSemanticTree?=",
             type: 'POST',
             data: {
                 input: encodedInput,
-                termSharing: $('#term-sharing').prop('checked')
+                termSharing: termSharing
             },
             contentType: "text/plain",
             success: function(data) {
                 $("#results").empty();
                 $.each(data, function(ind, reading) {
+                    if (!termSharing) {
+                        reading = postProcessReading(reading)
+                    }
                     console.log(reading);
                     reading = escapeHtml(reading)
                     readingBtn = readingBtnTmpl(ind)
                     $("#results").append(readingBtn)
-                    $("#results").append("</br><span>" + reading + "</span><br/><br/>")
+                    divTpl = (reading,ind) => `</br><div id="reading${ind}">${reading}}</div><br/><br/>`
+                    $("#results").append(divTpl(reading,ind))
+                    
                 });
                 installSemanticTreeBtnHandler(data);
             }

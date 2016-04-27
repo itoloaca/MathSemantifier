@@ -96,15 +96,7 @@ function escapeHtml(string) {
 }
 
 function autoFormat() {
-    var totalLines = editor.lineCount();
-    var totalChars = editor.getTextArea().value.length;
-    editor.autoFormatRange({
-        line: 0,
-        ch: 0
-    }, {
-        line: totalLines,
-        ch: totalChars
-    });
+     editor.getDoc().setValue(vkbeautify.xml(editor.getValue()).trim());
 }
 
 function postProcessReading(xml) {

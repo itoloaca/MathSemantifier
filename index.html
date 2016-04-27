@@ -8,12 +8,24 @@
     <title>MathSemantifier</title>
     <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="css/MathSemantifier.css" rel="stylesheet"/>
-    
     <link rel=stylesheet href="lib/codemirror/css/codemirror.css"/>
-    
-    <script src="lib/codemirror/js/codemirror.js"></script>
-    <script src="lib/codemirror/js/xml.js"></script>
-    <script src="lib/codemirror/js/formatting.js"></script>
+    <link href="lib/codebeautify/css/formatter.css" rel="stylesheet"/>
+    <script src="lib/codemirror/js/codemirror.js">
+</script>
+    <script src="lib/codemirror/js/xml.js">
+</script>
+    <script src="lib/codemirror/js/formatting.js">
+</script>
+<script src="lib/jquery/jquery.min.js" >
+</script>
+ <script src="lib/bootstrap/js/bootstrap.min.js" >
+</script>
+    <script src="js/MathSemantifier.js" >
+</script>
+    <script src="lib/codebeautify/js/xmltree.js">
+</script>
+    <script src="lib/codebeautify/js/vkbeautify.js">
+</script>
     
 </head>
 
@@ -44,14 +56,12 @@
             </div>
         </div>
     </div>
-    <script src="lib/jquery/jquery.min.js" >
-</script>
-    <script src="lib/bootstrap/js/bootstrap.min.js" >
-</script>
-    <script src="js/MathSemantifier.js" >
-</script>
+    
+
+   
 
 <script>
+
 
 
 
@@ -145,13 +155,14 @@ $(document).ready(function() {
                     if (!termSharing) {
                         reading = postProcessReading(reading)
                     }
-                    console.log(reading);
-                    reading = escapeHtml(reading)
+                    
                     readingBtn = readingBtnTmpl(ind)
                     $("#results").append(readingBtn)
-                    divTpl = (reading,ind) => `</br><div id="reading${ind}">${reading}</div><br/><br/>`
-                    $("#results").append(divTpl(reading,ind))
-                    
+                    divTpl = ind=>`</br><div id="reading${ind}"></div><br/><br/>`
+                    $("#results").append(divTpl(ind))
+                    var beautifiedXML = vkbeautify.xml(reading).trim()
+                    console.log(beautifiedXML)
+                    new XMLTree({xml:beautifiedXML, container: "#reading"+ind, startExpanded:true})
                 });
                 installSemanticTreeBtnHandler(data);
             }

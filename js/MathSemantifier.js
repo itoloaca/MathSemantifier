@@ -172,6 +172,7 @@ function getSemanticTree(input) {
             termSharing: termSharing,
             crossReference: crossReference
         },
+        timeout:100*1000,
         contentType: "text/plain",
         success: function(data) {
             $("#results").empty();

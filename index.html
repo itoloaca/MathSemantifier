@@ -36,13 +36,17 @@
             <h3 id="title">Math Semantifier</h3>
             <div id="textarea">
                 <textarea id="editor" rows="30" cols="30">
+                <mrow>
                     <mn>2</mn>
                     <mo>+</mo>
+                    <mrow>
                     <mo>i</mo>
+                    </mrow>
                     <mo>+</mo>         
                     <mi>x</mi>
                     <mo>mod</mo>
                     <mn>5</mn>
+                </mrow>
                 </textarea>
             </div>
             <h4 id="live-preview">MathML Preview</h4>
@@ -51,8 +55,9 @@
 
             <input type="checkbox" id="term-sharing" name="term-sharing" /> Term Sharing <br/>
             <input type="checkbox" id="cross-reference" name="cross-reference" /> Cross Reference <br/>
-            <a id="semantify" class="btn btn-lg btn-success" href="#" role="button">Semantify MathML</a>
-            <a id="semantic-tree" class="btn btn-lg btn-success" href="#" role="button">Show Semantic Tree</a>
+            <a id="semantify" class="btn btn-lg btn-success btn-action" href="#" role="button">Semantify MathML</a>
+            <a id="semantic-tree" class="btn btn-lg btn-success btn-action" href="#" role="button">Show Semantic Tree</a>
+            <a id="evaluation" class="btn btn-lg btn-success btn-action" href="#" role="button">Evaluation</a>
             <div id="results" class="row">
             </div>
         </div>
@@ -62,6 +67,10 @@
    
 
 <script>
+
+
+
+
 
 
 
@@ -111,7 +120,10 @@ function postProcessReading(xml) {
 function addUniqueIds(xml) {
     var doc = $.parseXML(xml)
     var uniqueId = 1
-    $("*",doc).each(function(){$(this).attr('id', uniqueId); uniqueId++})
+    $("*", doc).each(function() {
+        $(this).attr('id', uniqueId);
+        uniqueId++
+    })
     return (new XMLSerializer()).serializeToString(doc);
 }
 
@@ -121,10 +133,23 @@ $(document).ready(function() {
     window.setInterval(function() {
         $("#mathml").html(math(editor.getValue()));
     }, 500);
+
     $("#semantify").click(function() {
         $("#results").empty();
         var input = editor.getValue();
-        console.log("Input length is " + input.length);
+        // Remove top level mrow
+        try {
+            var xml = $.parseXML(input)
+            if (xml.children.length == 1) {
+                var nodeName = xml.children[0].nodeName 
+                if (nodeName == "mrow") {
+                    input = $.map(xml.children[0].children, function(child,i){
+                       return (new XMLSerializer()).serializeToString(child)
+                    }).join("")
+                }
+            }
+        } catch(err) {}
+        console.log("Processed input = " + input + " len = " + input.length)
         var encodedInput = encodeURIComponent(input);
         $.post(parsingEngineURL + "/detect_notations", 
         encodedInput, 
@@ -140,54 +165,25 @@ $(document).ready(function() {
     $("#semantic-tree").click(function() {
         $("#results").empty()
         var input = editor.getValue()
-        input = input.replace(/\s*(<\/?[^<>\s]*(?:\s*[^=<>]+\s*="[^"]*"\s*)*>)\s*/g, "$1")
-        var encodedInput = encodeURIComponent(input)
-        var termSharing = $('#term-sharing').prop('checked')
-        var crossReference = $('#cross-reference').prop('checked')
-        $.ajax({
-            url: mmtURL + "/:marpa/getSemanticTree?=",
-            type: 'POST',
-            data: {
-                input: encodedInput,
-                termSharing: termSharing,
-                crossReference: crossReference
-            },
-            contentType: "text/plain",
-            success: function(data) {
-                $("#results").empty();
-                $.each(data, function(ind, reading) {
-                    if (!termSharing) {
-                        reading = postProcessReading(reading)
-                    }
-                    
-                    readingBtn = readingBtnTmpl(ind)
-                    $("#results").append(readingBtn)
-                    divTpl = ind=>`</br><div id="reading${ind}"></div><br/><br/>`
-                    $("#results").append(divTpl(ind))
-                    var beautifiedXML = vkbeautify.xml(reading).trim()
-                    console.log(beautifiedXML)
-                    new XMLTree({
-                        xml: beautifiedXML,
-                        container: "#reading" + ind,
-                        startExpanded: true
-                    })
-                });
-                installSemanticTreeBtnHandler(data);
-            }
-        });
+        getSemanticTree(input)
     })
     
-    function installSemanticTreeBtnHandler(data) {
-        $(".semantic-tree-reading").click(function() {
-            index = $(this).attr('index')
-            console.log("Index = " + index + " selected")
-            editor.getDoc().setValue(data[index]);
-            $("#results").empty();
-            data = {};
-            autoFormat();
-        })
-    }
-
+    
+    
+    $("#evaluation").click(function() {
+        
+        var $div = $('<div>');
+        $div.load('glossary.html', function() {
+            var semantics = $("semantics", $div)
+            console.log(semantics)
+            console.log(semantics[0])
+            console.log(semantics[3])
+        }
+        );
+        //         var pmml = $(":first-child", semantics[2])[0]
+        //         $("*", pmml).removeAttributes()
+        //          var html = $(pmml).html()
+    })
 });
 </script>
 

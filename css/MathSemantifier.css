@@ -9,16 +9,12 @@
   
 } 
 
-#semantify {
+.btn-action {
 	margin-top: 10px;
 	width: 220px;
 	margin-right:5px;
 }
 
-#semantic-tree {
-	margin-top: 10px;
-	width: 220px;
-}
 
 #results {
 	margin-top: 10px;

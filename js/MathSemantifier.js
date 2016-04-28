@@ -145,3 +145,65 @@ function replaceArgs(data) {
     data = {};
     autoFormat();
 }
+
+jQuery.fn.removeAttributes = function() {
+    return this.each(function() {
+        var attributes = $.map(this.attributes, function(item) {
+            return item.name;
+        });
+        var img = $(this);
+        $.each(attributes, function(i, item) {
+            img.removeAttr(item);
+        });
+    });
+}
+
+
+function getSemanticTree(input) {
+    input = input.replace(/\s*(<\/?[^<>\s]*(?:\s*[^=<>]+\s*="[^"]*"\s*)*>)\s*/g, "$1")
+    var encodedInput = encodeURIComponent(input)
+    var termSharing = $('#term-sharing').prop('checked')
+    var crossReference = $('#cross-reference').prop('checked')
+    $.ajax({
+        url: mmtURL + "/:marpa/getSemanticTree?=",
+        type: 'POST',
+        data: {
+            input: encodedInput,
+            termSharing: termSharing,
+            crossReference: crossReference
+        },
+        contentType: "text/plain",
+        success: function(data) {
+            $("#results").empty();
+            $.each(data, function(ind, reading) {
+                if (!termSharing) {
+                    reading = postProcessReading(reading)
+                }
+                
+                readingBtn = readingBtnTmpl(ind)
+                $("#results").append(readingBtn)
+                divTpl = ind=>`</br><div id="reading${ind}"></div><br/><br/>`
+                $("#results").append(divTpl(ind))
+                var beautifiedXML = vkbeautify.xml(reading).trim()
+                console.log(beautifiedXML)
+                new XMLTree({
+                    xml: beautifiedXML,
+                    container: "#reading" + ind,
+                    startExpanded: true
+                })
+            });
+            installSemanticTreeBtnHandler(data);
+        }
+    });
+}
+
+function installSemanticTreeBtnHandler(data) {
+    $(".semantic-tree-reading").click(function() {
+        index = $(this).attr('index')
+        console.log("Index = " + index + " selected")
+        editor.getDoc().setValue(data[index]);
+        $("#results").empty();
+        data = {};
+        autoFormat();
+    })
+}

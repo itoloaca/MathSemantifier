@@ -176,6 +176,10 @@ function getSemanticTree(input) {
         contentType: "text/plain",
         success: function(data) {
             $("#results").empty();
+            if (input.match(/^<mi>([^<>]*)<\/mi>$/g) != null) {
+                data.push(input.replace(/^<mi>([^<>]*)<\/mi>$/, "<ci>$1</ci>"))
+            }
+
             $.each(data, function(ind, reading) {
                 if (!termSharing) {
                     reading = postProcessReading(reading)
@@ -207,4 +211,13 @@ function installSemanticTreeBtnHandler(data) {
         data = {};
         autoFormat();
     })
+}
+
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
 }

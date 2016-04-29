@@ -77,6 +77,7 @@
 
 
 
+
 var parsingEngineURL = "http://localhost:3000";
 var mmtURL = "http://localhost:8081";
 var globalData = {};
@@ -133,7 +134,7 @@ $(document).ready(function() {
     window.setInterval(function() {
         $("#mathml").html(math(editor.getValue()));
     }, 500);
-
+    
     $("#semantify").click(function() {
         $("#results").empty();
         var input = editor.getValue();
@@ -141,14 +142,14 @@ $(document).ready(function() {
         try {
             var xml = $.parseXML(input)
             if (xml.children.length == 1) {
-                var nodeName = xml.children[0].nodeName 
+                var nodeName = xml.children[0].nodeName
                 if (nodeName == "mrow") {
-                    input = $.map(xml.children[0].children, function(child,i){
-                       return (new XMLSerializer()).serializeToString(child)
+                    input = $.map(xml.children[0].children, function(child, i) {
+                        return (new XMLSerializer()).serializeToString(child)
                     }).join("")
                 }
             }
-        } catch(err) {}
+        } catch (err) {}
         console.log("Processed input = " + input + " len = " + input.length)
         var encodedInput = encodeURIComponent(input);
         $.post(parsingEngineURL + "/detect_notations", 
@@ -168,21 +169,41 @@ $(document).ready(function() {
         getSemanticTree(input)
     })
     
-    
-    
+    var evalOngoing = false
+    var next = false
+    var i = 0
+    var semantics = null
+    function nextIter() {
+        console.log("New iteration")
+        next = false
+        $("#results").empty()
+        s = semantics[i]
+        console.log("New iteration")
+        editor.getDoc().setValue($(s).html());
+        autoFormat();
+        var pmml = $(s.children[0]).html()
+        console.log(pmml)
+        getSemanticTree(pmml)
+        i++
+    }
+
     $("#evaluation").click(function() {
-        
+        if (evalOngoing) {
+            nextIter()
+            return;
+        }
+        evalOngoing = true
+        console.log("Reading glossary")
         var $div = $('<div>');
         $div.load('glossary.html', function() {
-            var semantics = $("semantics", $div)
+            semantics = $("semantics", $div)
+            $.map(semantics, function(val, i) {
+                $("mspace", val.children[0]).remove()
+                $("*", val.children[0]).removeAttributes()
+            })
             console.log(semantics)
-            console.log(semantics[0])
-            console.log(semantics[3])
-        }
-        );
-        //         var pmml = $(":first-child", semantics[2])[0]
-        //         $("*", pmml).removeAttributes()
-        //          var html = $(pmml).html()
+           
+        });
     })
 });
 </script>

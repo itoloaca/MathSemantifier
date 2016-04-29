@@ -74,10 +74,6 @@
 
 
 
-
-
-
-
 var parsingEngineURL = "http://localhost:3000";
 var mmtURL = "http://localhost:8081";
 var globalData = {};
@@ -150,6 +146,7 @@ $(document).ready(function() {
                 }
             }
         } catch (err) {}
+        input = input.replace(/\s*(<\/?[^<>\s]*(?:\s*[^=<>]+\s*="[^"]*"\s*)*>)\s*/g, "$1")
         console.log("Processed input = " + input + " len = " + input.length)
         var encodedInput = encodeURIComponent(input);
         $.post(parsingEngineURL + "/detect_notations", 
@@ -163,6 +160,7 @@ $(document).ready(function() {
       </button>
     `
     
+    
     $("#semantic-tree").click(function() {
         $("#results").empty()
         var input = editor.getValue()
@@ -171,22 +169,28 @@ $(document).ready(function() {
     
     var evalOngoing = false
     var next = false
-    var i = 0
-    var semantics = null
+    var i = 22
+    // IMPORTANT Starting index of evaluation
+    var semantics = null 
+    
     function nextIter() {
-        console.log("New iteration")
+        console.log("i = " + i)
         next = false
         $("#results").empty()
-        s = semantics[i]
-        console.log("New iteration")
-        editor.getDoc().setValue($(s).html());
+        s = $(semantics[i])
+        editor.getDoc().setValue(s.html());
+        
+        console.log("here")
+        $("*", s).removeAttributes()
+        console.log(s.html())
+        console.log(s[0])
+        
         autoFormat();
-        var pmml = $(s.children[0]).html()
-        console.log(pmml)
-        getSemanticTree(pmml)
+        var pmml = $(s[0].children[0]).html()             
+        getSemanticTree(pmml, s[0].children[1].children[0])
         i++
     }
-
+    
     $("#evaluation").click(function() {
         if (evalOngoing) {
             nextIter()
@@ -200,9 +204,13 @@ $(document).ready(function() {
             $.map(semantics, function(val, i) {
                 $("mspace", val.children[0]).remove()
                 $("*", val.children[0]).removeAttributes()
+                $(val.children[0]).removeAttributes()
             })
+            semantics = semantics.filter(function(i, val) {
+                return $("csymbol", val).length > 0
+            })
+            semantics = $.unique(semantics)
             console.log(semantics)
-           
         });
     })
 });

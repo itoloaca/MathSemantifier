@@ -197,6 +197,7 @@ function getSemanticTree(input) {
                     startExpanded: true
                 })
             });
+            semanticTreeResults = $(data);
             installSemanticTreeBtnHandler(data);
         }
     });
@@ -213,11 +214,52 @@ function installSemanticTreeBtnHandler(data) {
     })
 }
 
-function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
-  }
+function getSemanticTree(input, cml) {
+    input = input.replace(/\s*(<\/?[^<>\s]*(?:\s*[^=<>]+\s*="[^"]*"\s*)*>)\s*/g, "$1")
+    var encodedInput = encodeURIComponent(input)
+    var termSharing = $('#term-sharing').prop('checked')
+    var crossReference = $('#cross-reference').prop('checked')
+    $.ajax({
+        url: mmtURL + "/:marpa/getSemanticTree?=",
+        type: 'POST',
+        data: {
+            input: encodedInput,
+            termSharing: termSharing,
+            crossReference: crossReference
+        },
+        timeout:100*1000,
+        contentType: "text/plain",
+        success: function(data) {
+            $("#results").empty();
+            if (input.match(/^<mi>([^<>]*)<\/mi>$/g) != null) {
+                data.push(input.replace(/^<mi>([^<>]*)<\/mi>$/, "<ci>$1</ci>"))
+            }
+            
+            $.each(data, function(ind, reading) {
+                if (!termSharing) {
+                    reading = postProcessReading(reading)
+                }
+                
+                readingBtn = readingBtnTmpl(ind)
+                $("#results").append(readingBtn)
+                divTpl = ind=>`</br><div id="reading${ind}"></div><br/><br/>`
+                $("#results").append(divTpl(ind))
+                var beautifiedXML = vkbeautify.xml(reading).trim()
+//                 console.log(beautifiedXML)
+                new XMLTree({
+                    xml: beautifiedXML,
+                    container: "#reading" + ind,
+                    startExpanded: true
+                })
+
+                cml = $("<p/>").append(cml)
+                $("*", cml).removeAttributes()               
+                var cmlStr = $(cml).html()
+                if (cmlStr == reading) {
+                    console.log("CORRECT: " + reading)
+                } 
+            });
+            installSemanticTreeBtnHandler(data);
+        }
+    });
 }

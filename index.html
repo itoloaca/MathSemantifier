@@ -36,17 +36,17 @@
             <h3 id="title">Math Semantifier</h3>
             <div id="textarea">
                 <textarea id="editor" rows="30" cols="30">
-                <mrow>
+     
                     <mn>2</mn>
                     <mo>+</mo>
-                    <mrow>
-                    <mo>i</mo>
-                    </mrow>
+                    
+                   <mo>i</mo>
+              
                     <mo>+</mo>         
                     <mi>x</mi>
                     <mo>mod</mo>
                     <mn>5</mn>
-                </mrow>
+            
                 </textarea>
             </div>
             <h4 id="live-preview">MathML Preview</h4>
@@ -72,7 +72,8 @@
 
 
 
-
+var correct = 0
+var iter = 0
 
 var parsingEngineURL = "http://localhost:3000";
 var mmtURL = "http://localhost:8081";
@@ -169,26 +170,24 @@ $(document).ready(function() {
     
     var evalOngoing = false
     var next = false
-    var i = 22
+    
     // IMPORTANT Starting index of evaluation
     var semantics = null 
     
     function nextIter() {
+        i = iter
         console.log("i = " + i)
         next = false
         $("#results").empty()
         s = $(semantics[i])
         editor.getDoc().setValue(s.html());
         
-        console.log("here")
         $("*", s).removeAttributes()
-        console.log(s.html())
-        console.log(s[0])
-        
+
         autoFormat();
         var pmml = $(s[0].children[0]).html()             
-        getSemanticTree(pmml, s[0].children[1].children[0])
-        i++
+        getSemanticTreeEval(pmml, s[0].children[1].children[0])   
+        iter++
     }
     
     $("#evaluation").click(function() {

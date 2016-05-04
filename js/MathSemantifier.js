@@ -172,14 +172,14 @@ function getSemanticTree(input) {
             termSharing: termSharing,
             crossReference: crossReference
         },
-        timeout:100*1000,
+        timeout: 100 * 1000,
         contentType: "text/plain",
         success: function(data) {
             $("#results").empty();
-            if (input.match(/^<mi>([^<>]*)<\/mi>$/g) != null) {
+            if (input.match(/^<mi>([^<>]*)<\/mi>$/g) != null ) {
                 data.push(input.replace(/^<mi>([^<>]*)<\/mi>$/, "<ci>$1</ci>"))
             }
-
+            
             $.each(data, function(ind, reading) {
                 if (!termSharing) {
                     reading = postProcessReading(reading)
@@ -214,7 +214,7 @@ function installSemanticTreeBtnHandler(data) {
     })
 }
 
-function getSemanticTree(input, cml) {
+function getSemanticTreeEval(input, cml) {
     input = input.replace(/\s*(<\/?[^<>\s]*(?:\s*[^=<>]+\s*="[^"]*"\s*)*>)\s*/g, "$1")
     var encodedInput = encodeURIComponent(input)
     var termSharing = $('#term-sharing').prop('checked')
@@ -227,14 +227,17 @@ function getSemanticTree(input, cml) {
             termSharing: termSharing,
             crossReference: crossReference
         },
-        timeout:100*1000,
+        timeout: 100 * 1000,
         contentType: "text/plain",
         success: function(data) {
             $("#results").empty();
-            if (input.match(/^<mi>([^<>]*)<\/mi>$/g) != null) {
+            if (input.match(/^<mi>([^<>]*)<\/mi>$/g) != null ) {
                 data.push(input.replace(/^<mi>([^<>]*)<\/mi>$/, "<ci>$1</ci>"))
             }
-            
+            var success = false
+            cml = $("<p/>").append(cml)
+            $("*", cml).removeAttributes()
+            var cmlStr = $(cml).html()
             $.each(data, function(ind, reading) {
                 if (!termSharing) {
                     reading = postProcessReading(reading)
@@ -245,20 +248,22 @@ function getSemanticTree(input, cml) {
                 divTpl = ind=>`</br><div id="reading${ind}"></div><br/><br/>`
                 $("#results").append(divTpl(ind))
                 var beautifiedXML = vkbeautify.xml(reading).trim()
-//                 console.log(beautifiedXML)
+                //                 console.log(beautifiedXML)
                 new XMLTree({
                     xml: beautifiedXML,
                     container: "#reading" + ind,
                     startExpanded: true
                 })
-
-                cml = $("<p/>").append(cml)
-                $("*", cml).removeAttributes()               
-                var cmlStr = $(cml).html()
-                if (cmlStr == reading) {
-                    console.log("CORRECT: " + reading)
-                } 
+                success = success || (cmlStr == reading)
             });
+            if (success) {
+                correct++
+                console.log(`Success ratio = ${correct / (iter)}, total = ${iter}, correct = ${correct}, current=${success}`)
+            } else {
+                console.log(`Error, cml = ${cmlStr}`)
+                console.log(data)
+            }
+            
             installSemanticTreeBtnHandler(data);
         }
     });

@@ -1,27 +1,15 @@
-#editor {
-}
-
-#MathSemantifier {
- 
-}
-
-#title {
-  
-} 
-
 .btn-action {
 	margin-top: 10px;
 	width: 220px;
 	margin-right:5px;
 }
 
+.CodeMirror {
+	height: auto;
+}
 
 #results {
 	margin-top: 10px;
-}
- 
-.custom-row {
-/* 	width:100px; */
 }
  
 .preview {

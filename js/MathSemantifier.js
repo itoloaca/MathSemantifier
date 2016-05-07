@@ -18,7 +18,8 @@ function processNotPositions(data) {
     console.log("Message: " + data["message"]);
     console.log("Payload:");
     console.log(data["payload"]);
-    var resultPageHeader = "Detected notations: <br>";
+    var resultPageHeader = "<div class='h4'>Guided Semantification</div>";
+    resultPageHeader += "<div class='h5'>Top-level Notations:</div>";
     $("#results").append(resultPageHeader);
     
     for (var key in data["payload"]) {
@@ -73,9 +74,9 @@ function displayArguments(data) {
     console.log(data);
     
     $('#results').empty();
-    
-    var resultPageHeader = data["status"] + "<br>" + data["message"] + "<br>";
-    //     $("#results").append(resultPageHeader);
+    var resultPageHeader = "<div class='h4'>Guided Semantification</div>";
+    resultPageHeader += "<div class='h5'>Argument Choice:</div>";
+    $("#results").append(resultPageHeader);
     var key = data.key;
     $("#results").append('<div>' + key.split("_").join(" ").replace(/P\d+N\d+$/, "") + '</div>');
     for (var i in data["payload"]) {
@@ -136,6 +137,8 @@ function replaceArgs(data) {
     console.log(result);
     editor.getDoc().setValue(result);
     $("#results").empty();
+    var resultPageHeader = "<div class='h4'>Guided Semantification Result</div>";
+    $("#results").append(resultPageHeader);
     var beautifiedXML = vkbeautify.xml(result).trim()
     new XMLTree({
         xml: beautifiedXML,
@@ -163,19 +166,19 @@ function getSemanticTree(input) {
     input = input.replace(/\s*(<\/?[^<>\s]*(?:\s*[^=<>]+\s*="[^"]*"\s*)*>)\s*/g, "$1")
     var encodedInput = encodeURIComponent(input)
     var termSharing = $('#term-sharing').prop('checked')
-    var crossReference = $('#cross-reference').prop('checked')
+ 
     $.ajax({
         url: mmtURL + "/:marpa/getSemanticTree?=",
         type: 'POST',
         data: {
             input: encodedInput,
             termSharing: termSharing,
-            crossReference: crossReference
         },
         timeout: 100 * 1000,
         contentType: "text/plain",
         success: function(data) {
             $("#results").empty();
+            $("#results").append("<div class='h4'>Semantic Tree Result </div>")
             if (input.match(/^<mi>([^<>]*)<\/mi>$/g) != null ) {
                 data.push(input.replace(/^<mi>([^<>]*)<\/mi>$/, "<ci>$1</ci>"))
             }
@@ -224,7 +227,6 @@ function getSemanticTreeEval(input, cml) {
         data: {
             input: encodedInput,
             termSharing: termSharing,
-            crossReference: false
         },
         timeout: 100 * 1000,
         contentType: "text/plain",

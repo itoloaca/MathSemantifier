@@ -218,14 +218,13 @@ function getSemanticTreeEval(input, cml) {
     input = input.replace(/\s*(<\/?[^<>\s]*(?:\s*[^=<>]+\s*="[^"]*"\s*)*>)\s*/g, "$1")
     var encodedInput = encodeURIComponent(input)
     var termSharing = $('#term-sharing').prop('checked')
-    var crossReference = $('#cross-reference').prop('checked')
     $.ajax({
         url: mmtURL + "/:marpa/getSemanticTree?=",
         type: 'POST',
         data: {
             input: encodedInput,
             termSharing: termSharing,
-            crossReference: crossReference
+            crossReference: false
         },
         timeout: 100 * 1000,
         contentType: "text/plain",
